@@ -1,0 +1,28 @@
+//Authored by Jeff Comer
+
+def nodeLabel = 'pod-builder-agent'
+pipeline {
+  environment {
+        BRANCH_NAME = "${GIT_BRANCH}"
+  }
+  agent {
+    kubernetes {
+      yamlFile 'jnlp-ubuntu.yaml'
+    }
+  }
+  stages{
+    stage('Create NSO Pods') {
+      steps {
+        container('jnlp') {
+          sh '''
+          echo "Inbound Agent is Connected"
+          '''
+        }
+        container('ubuntu-runner') {
+          //apic sim's stateless - revert to base snapshot with credentials and ip address only
+          sh 'kubectl apply -f nso-cl2022.yaml -n ${BRANCH_NAME}'
+        }
+      }
+    }
+  }
+}
