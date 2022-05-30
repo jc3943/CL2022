@@ -1,0 +1,45 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: nso-podx
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nso-podx
+    spec:
+      containers:
+        - name: nso-podx
+          image: jc3943/nso-sys:5.4.5.2
+          command: ["/bin/sleep", "3650d"]
+          imagePullPolicy: "Always"
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: nso-podx
+  labels:
+    app: nso-podx
+spec:
+  selector:
+    app: nso-podx
+  ports:
+  - name: nso-podx-http
+    protocol: TCP
+    port: 8080
+    targetPort: 8080
+  - name: nso-podx-netconf
+    protocol: TCP
+    port: 2022
+    targetPort: 2022
+  - name: nso-podx-ssh
+    protocol: TCP
+    port: 2024
+    targetPort: 2024
+  selector:
+    app: nso-podx
+  type: LoadBalancer
+  sessionAffinity: None
+  externalTrafficPolicy: Cluster
