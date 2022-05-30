@@ -11,7 +11,7 @@ pipeline {
     }
   }
   stages{
-    stage('Create NSO Pods') {
+    stage('Delete NSO Pods') {
       steps {
         container('jnlp') {
           sh '''
