@@ -1,0 +1,84 @@
+apiVersion: v1
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: jenkins-pod6-pv-vsphere
+  namespace: pod6 
+  labels:
+    type: local
+    app: jenkins
+spec:
+  storageClassName: standard
+  capacity:
+    storage: 4Gi
+  accessModes:
+    - ReadWriteMany
+  vsphereVolume:
+    volumePath: "[DEV] k8s-vols/jenkins-pod6.vmdk"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: jenkins-pod6-pvc-vsphere
+  namespace: pod6 
+  labels:
+    app: jenkins
+spec:
+  storageClassName: standard
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 4Gi
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: jenkins
+  namespace: pod6 
+spec:
+  selector:
+    matchLabels:
+      app: jenkins
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: jenkins
+    spec:
+      serviceAccountName: jenkins-admin-pod6
+      securityContext:
+              fsGroup: 1000
+              runAsUser: 1000
+      containers:
+        - name: jenkins
+          image: jc3943/jenkins:0513
+          imagePullPolicy: "IfNotPresent"
+          volumeMounts:
+            - mountPath: /var/jenkins_home
+              name: jenkins-vsphere
+      volumes:
+        - name: jenkins-vsphere
+          persistentVolumeClaim:
+            claimName: jenkins-pod6-pvc-vsphere
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jenkins
+  namespace: pod6 
+  labels:
+    app: jenkins
+spec:
+  selector:
+    app: jenkins
+  ports:
+    - name: jenkins-tcp
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+    - name: jenkins-inbound
+      protocol: TCP
+      port: 50000
+      targetPort: 50000
+  type: LoadBalancer

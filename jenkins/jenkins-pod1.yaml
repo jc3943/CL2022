@@ -1,0 +1,105 @@
+apiVersion: v1
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: jenkins-pv-vsphere
+  namespace: pod1 
+  labels:
+    type: local
+    app: jenkins
+spec:
+  storageClassName: standard
+  capacity:
+    storage: 4Gi
+  accessModes:
+    - ReadWriteMany
+  vsphereVolume:
+    volumePath: "[DEV] k8s-vols/jenkins-pod1.vmdk"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: jenkins-pvc-vsphere
+  namespace: pod1 
+  labels:
+    app: jenkins
+spec:
+  storageClassName: standard
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 4Gi
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: jenkins-admin
+  namespace: pod1
+secrets:
+- name: jenkins-admin-token-bms4c
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: jenkins-admin
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: jenkins-admin
+  namespace: pod1
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: jenkins
+  namespace: pod1 
+spec:
+  selector:
+    matchLabels:
+      app: jenkins
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: jenkins
+    spec:
+      serviceAccountName: jenkins-admin
+      securityContext:
+              fsGroup: 1000
+              runAsUser: 1000
+      containers:
+        - name: jenkins
+          image: jc3943/jenkins:0513
+          imagePullPolicy: "Always"
+          volumeMounts:
+            - mountPath: /var/jenkins_home
+              name: jenkins-vsphere
+      volumes:
+        - name: jenkins-vsphere
+          persistentVolumeClaim:
+            claimName: jenkins-pvc-vsphere
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jenkins
+  namespace: pod1 
+  labels:
+    app: jenkins
+spec:
+  selector:
+    app: jenkins
+  ports:
+    - name: jenkins-tcp
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+    - name: jenkins-inbound
+      protocol: TCP
+      port: 50000
+      targetPort: 50000
+  type: LoadBalancer
