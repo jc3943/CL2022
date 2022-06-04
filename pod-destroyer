@@ -4,6 +4,7 @@ def nodeLabel = 'pod-builder-agent'
 pipeline {
   environment {
         BRANCH_NAME = "${GIT_BRANCH}"
+        jenkinsDefs = "jenkins/jenkins-" + "${GIT_BRANCH}" + ".yaml"
   }
   agent {
     kubernetes {
@@ -19,9 +20,18 @@ pipeline {
           '''
         }
         container('ubuntu-runner') {
-          //apic sim's stateless - revert to base snapshot with credentials and ip address only
+          //Delete NSO containers on k8s
           sh 'cp -r .kube /root/'
           sh 'kubectl delete -f nso-cl2022.yaml -n ${BRANCH_NAME}'
+        }
+      }
+    }
+    stage('Delete Jenkins Pods') {
+      steps {
+        container('ubuntu-runner') {
+          //Delete Jenkins containers on k8s
+          sh 'cp -r .kube /root/'
+          sh 'kubectl delete -f $jenkinsDefs'
         }
       }
     }
