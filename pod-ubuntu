@@ -31,7 +31,7 @@ pipeline {
                   vcenter_hostname: "172.16.10.241",
                   datacenter_name: "${BRANCH_NAME}",
                   cluster_name: "${BRANCH_NAME}",
-                  pod_name: "${BRANCH_NAME}"
+                  pod_name: "${BRANCH_NAME}",
                   u_branch: $upperBranch
               ],
               colorized: true
