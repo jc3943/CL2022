@@ -25,13 +25,14 @@
       folder: /
       datacenter: '{{ datacenter_name }}'
       cluster: '{{ cluster_name }}'
+      customization:
+        - dns_servers: 172.16.20.101
       networks:
         - name: 'CG61|CL-PODS|EPG_{{ u_branch }}'
           type: static
           ip: '{{ vms.ipAddress }}'
           netmask: '{{ vms.netmask }}'
           gateway: '{{ vms.gateway }}'
-          dns_servers: 172.16.20.101
           connected: yes
           start_connected: yes
       state: poweredon
