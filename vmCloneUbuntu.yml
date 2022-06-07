@@ -14,10 +14,8 @@
   - name: TASK - Clone Ubuntu Template
     community.vmware.vmware_guest:
       hostname: '{{ vcenter_hostname }}'
-      #hostname: 172.16.10.241
-      username: 'administrator@vsphere.local'
-      #password: '{{ vcenter_password }}'
-      password: DEVP@ssw0rd
+      username: '{{ vcsa_user }}'
+      password: '{{ vcsa_pw }}'
       validate_certs: no
       template: '{{ vms.template }}'
       #name: '{{ vms.prefix }}{{ pod_name }}'
