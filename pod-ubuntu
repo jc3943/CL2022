@@ -30,7 +30,7 @@ pipeline {
               //extras: '--extra-vars="@$varPath/vmware/vcsa-Specs.yaml"',
               extraVars: [
                   vcenter_hostname: "172.16.10.241",
-                  vcsa_user: "$VCSA_CREDS_USR"
+                  vcsa_user: "$VCSA_CREDS_USR",
                   vcsa_pw: "$VCSA_CREDS_PSW",
                   datacenter_name: "HX-DEV",
                   cluster_name: "HX-DEV",
