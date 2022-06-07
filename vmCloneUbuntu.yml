@@ -1,76 +1,39 @@
 ---
 - hosts: localhost
-  name: Deploy the VCSA to an ESXi Host
+  name: Clone Ubuntu Template
   gather_facts: false
   vars: 
-    esxi_address: '172.16.64.22'
-    esxi_username: 'root'
-    esxi_password: 'QAP@ssw0rd'
-    pod_esxi_password: 'DEVP@ssw0rd'
-    vcenter_password: 'QAP@ssw0rd'
-    #vcenter_hostname: 'hx-crypto-vcsa'
-    #vcenter_address: '172.16.10.241'
-    net_prefix: '22'
-    net_gateway: '172.16.67.254'
-    dns_servers: '172.16.20.101'
-    domain: 'thor.iws.navy.mil'
-    searchpath: "thor.iws.navy.mil"
-    vcsa_size: 'tiny'
-    datastore: 'QA'
-    networks: 'Storage Controller Management Network'
-    vcsa_ova_name: VMware-vCenter-Server-Appliance-6.7.0.46000-17138064_OVF10.ova
-    vcsa_ova_url: 172.16.20.10:/data/nfs/00-Software/vmware/
-    #vcsa_ova_file: '/var/jenkins_home/{{ vcsa_ova_name }}'
-    vcsa_ova_file: '/tmp/{{ vcsa_ova_name }}'
-    nfs_file_browser_url: "http://172.16.10.124:8005"
-    nfs_file_browser_user: "admin"
-    nfs_file_browser_password: "admin"
-    nfs_file_url: '/api/raw/Software/VMWare/{{ vcsa_ova_name }}'
+    vcenter_password: 'asdfasdf'
 
   tasks:
-
-
+  - read_csv:
+    path: vars/jb-hosts.csv
+  register: vmlist
+  tags: jb
 
   - name: TASK - Clone Ubuntu Template
     community.vmware.vmware_guest:
-      hostname: '{{ item.vcsaAddress }}'
+      #hostname: '{{ item.vcsaAddress }}'
+      hostname: 172.16.10.241
       username: 'administrator@vsphere.local'
-      password: '{{ vcenter_password }}'
+      #password: '{{ vcenter_password }}'
+      password: DEVP@ssw0rd
       validate_certs: no
-      name: pod1-ubuntu40
-      template: TMPL_qa-ubuntu-40
-      folder: /Jenkins-Dev
+      name: '{{ vms.name_prefix }}{{ pod_name }}'
+      template: '{{ vms.template }}'
+      folder: /
       datacenter: '{{ datacenter_name }}'
       cluster: '{{ cluster_name }}'
       networks:
-        - name: SERVICES|Management|EPG_1200
+        - name: CG61|CL-PODS|EPG_POD1
           type: static
-          ip: 172.16.66.195
-          netmask: 255.255.252.0
-          gateway: 172.16.67.254
+          ip: '{{ vms.ip_address }}'
+          netmask: '{{ vms.netmask }}'
+          gateway: '{{ vms.gateway }}'
           connected: yes
           start_connected: yes
       state: poweredon
-    with_items: "{{ vcsaspecs }}"
+    loop: "{{ vmlist.list }}"
+    loop_control:
+        loop_var: vms
     delegate_to: localhost
-
-  - name: TASK - Clone Ubuntu Template
-    community.vmware.vmware_guest_network:
-      hostname: '{{ item.vcsaAddress }}'
-      username: 'administrator@vsphere.local'
-      password: '{{ vcenter_password }}'
-      validate_certs: no
-      datacenter: '{{ datacenter_name }}'
-      name: pod1-ubuntu40
-      networks:
-        - name: SERVICES|Management|EPG_1200
-          connected: yes
-          start_connected: yes
-          label:  Network adapter 1
-          type: static
-          ip: 172.16.66.195
-          netmask: 255.255.252.0
-          gateway: 172.16.67.254
-    with_items: "{{ vcsaspecs }}"
-    delegate_to: localhost
-
