@@ -31,6 +31,7 @@
           ip: '{{ vms.ipAddress }}'
           netmask: '{{ vms.netmask }}'
           gateway: '{{ vms.gateway }}'
+          dns_servers: 172.16.20.101
           connected: yes
           start_connected: yes
       state: poweredon
