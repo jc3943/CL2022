@@ -7,9 +7,9 @@
 
   tasks:
   - read_csv:
-    path: $varPath/vmware/jb-hosts.csv
-  register: vmlist
-  tags: jb
+      path: $varPath/vmware/jb-hosts.csv
+    register: vmlist
+    tags: jb
 
   - name: TASK - Clone Ubuntu Template
     community.vmware.vmware_guest:
