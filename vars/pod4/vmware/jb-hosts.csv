@@ -1,0 +1,2 @@
+﻿vmPrefix,template,ipAddress,netmask,gateway
+ubunt,TMPL_ubuntu2204-pod,172.0.4.1,255.255.255.0,172.0.4.254
