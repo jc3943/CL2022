@@ -29,8 +29,8 @@ pipeline {
               //extras: '--extra-vars="@$varPath/vmware/vcsa-Specs.yaml"',
               extraVars: [
                   vcenter_hostname: "172.16.10.241",
-                  datacenter_name: "${BRANCH_NAME}",
-                  cluster_name: "${BRANCH_NAME}",
+                  datacenter_name: "HX-DEV",
+                  cluster_name: "HX-DEV",
                   pod_name: "${BRANCH_NAME}",
                   u_branch: "$upperBranch"
               ],

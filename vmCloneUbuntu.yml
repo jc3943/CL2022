@@ -13,7 +13,7 @@
 
   - name: TASK - Clone Ubuntu Template
     community.vmware.vmware_guest:
-      hostname: '{{ vcsaAddress_hostname }}'
+      hostname: '{{ vcenter_hostname }}'
       #hostname: 172.16.10.241
       username: 'administrator@vsphere.local'
       #password: '{{ vcenter_password }}'
