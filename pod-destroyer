@@ -6,6 +6,8 @@ pipeline {
         BRANCH_NAME = "${GIT_BRANCH}"
         varPath = "vars/" + "${BRANCH_NAME}"
         jenkinsDefs = "jenkins/jenkins-" + "${GIT_BRANCH}" + ".yaml"
+        def upperBranch = "${GIT_BRANCH}".toUpperCase()
+        VCSA_CREDS = credentials('vcsa-creds')
   }
   agent {
     kubernetes {

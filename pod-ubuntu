@@ -27,7 +27,6 @@ pipeline {
           ansiblePlaybook(
               playbook: './vmCloneUbuntu.yml',
               inventory: 'localhost',
-              //extras: '--extra-vars="@$varPath/vmware/vcsa-Specs.yaml"',
               extraVars: [
                   vcenter_hostname: "172.16.10.241",
                   vcsa_user: "$VCSA_CREDS_USR",

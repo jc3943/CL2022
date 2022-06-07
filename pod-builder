@@ -6,6 +6,8 @@ pipeline {
         BRANCH_NAME = "${GIT_BRANCH}"
         varPath = "vars/" + "${BRANCH_NAME}"
         jenkinsDefs = "jenkins/jenkins-" + "${GIT_BRANCH}" + ".yaml"
+        def upperBranch = "${GIT_BRANCH}".toUpperCase()
+        VCSA_CREDS = credentials('vcsa-creds')
   }
   agent {
     kubernetes {
@@ -33,6 +35,27 @@ pipeline {
           //create Jenkins containers on k8s
           sh 'cp -r .kube /root/'
           sh 'kubectl apply -f $jenkinsDefs'
+        }
+      }
+    }
+    stage('Create Ubuntu Jumpboxes') {
+      steps {
+        container('ubuntu-runner') {
+          //Create cloned ubuntu jumpboxes
+          ansiblePlaybook(
+              playbook: './vmCloneUbuntu.yml',
+              inventory: 'localhost',
+              extraVars: [
+                  vcenter_hostname: "172.16.10.241",
+                  vcsa_user: "$VCSA_CREDS_USR",
+                  vcsa_pw: "$VCSA_CREDS_PSW",
+                  datacenter_name: "HX-DEV",
+                  cluster_name: "HX-DEV",
+                  pod_name: "${BRANCH_NAME}",
+                  u_branch: "$upperBranch"
+              ],
+              colorized: true
+          )
         }
       }
     }
