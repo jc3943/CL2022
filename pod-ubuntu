@@ -6,7 +6,7 @@ pipeline {
         BRANCH_NAME = "${GIT_BRANCH}"
         varPath = "vars/" + "${BRANCH_NAME}"
         jenkinsDefs = "jenkins/jenkins-" + "${GIT_BRANCH}" + ".yaml"
-        def upperBransh = "${GIT_BRANCH}".toUppderCase()
+        def upperBransh = "${GIT_BRANCH}".toUpperCase()
   }
   agent {
     kubernetes {
