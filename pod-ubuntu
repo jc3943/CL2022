@@ -32,7 +32,7 @@ pipeline {
                   datacenter_name: "${BRANCH_NAME}",
                   cluster_name: "${BRANCH_NAME}",
                   pod_name: "${BRANCH_NAME}",
-                  u_branch: $upperBranch
+                  u_branch: "$upperBranch"
               ],
               colorized: true
           )
