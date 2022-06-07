@@ -7,7 +7,7 @@
 
   tasks:
   - read_csv:
-    path: vars/jb-hosts.csv
+    path: $varPath/vmware/jb-hosts.csv
   register: vmlist
   tags: jb
 

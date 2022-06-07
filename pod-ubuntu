@@ -1,0 +1,40 @@
+//Authored by Jeff Comer
+
+def nodeLabel = 'pod-builder-agent'
+pipeline {
+  environment {
+        BRANCH_NAME = "${GIT_BRANCH}"
+        varPath = "vars/" + "${BRANCH_NAME}"
+        jenkinsDefs = "jenkins/jenkins-" + "${GIT_BRANCH}" + ".yaml"
+  }
+  agent {
+    kubernetes {
+      yamlFile 'jnlp-ubuntu.yaml'
+    }
+  }
+  stages{
+    stage('Build Ubuntu Pods') {
+      steps {
+        container('jnlp') {
+          sh '''
+          echo "Inbound Agent is Connected"
+          '''
+        }
+        container('ubuntu-runner') {
+          //Create cloned ubuntu jumpboxes
+          ansiblePlaybook(
+              playbook: './vmCloneUbuntu.yml',
+              inventory: 'localhost',
+              //extras: '--extra-vars="@$varPath/vmware/vcsa-Specs.yaml"',
+              extraVars: [
+                  vcenter_hostname: "$vcsaHostName",
+                  datacenter_name: "${BRANCH_NAME}",
+                  cluster_name: "${BRANCH_NAME}",
+                  pod_name: "${BRANCH_NAME}"
+              ],
+              colorized: true
+          )
+      }
+    }
+  }
+}

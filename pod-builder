@@ -4,6 +4,7 @@ def nodeLabel = 'pod-builder-agent'
 pipeline {
   environment {
         BRANCH_NAME = "${GIT_BRANCH}"
+        varPath = "vars/" + "${BRANCH_NAME}"
         jenkinsDefs = "jenkins/jenkins-" + "${GIT_BRANCH}" + ".yaml"
   }
   agent {
