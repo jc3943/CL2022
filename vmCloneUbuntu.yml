@@ -13,21 +13,22 @@
 
   - name: TASK - Clone Ubuntu Template
     community.vmware.vmware_guest:
-      #hostname: '{{ item.vcsaAddress }}'
-      hostname: 172.16.10.241
+      hostname: '{{ vcsaAddress_hostname }}'
+      #hostname: 172.16.10.241
       username: 'administrator@vsphere.local'
       #password: '{{ vcenter_password }}'
       password: DEVP@ssw0rd
       validate_certs: no
-      name: '{{ vms.name_prefix }}{{ pod_name }}'
       template: '{{ vms.template }}'
+      #name: '{{ vms.prefix }}{{ pod_name }}'
+      name: 'ubuntu-{{ pod_name }}'
       folder: /
       datacenter: '{{ datacenter_name }}'
       cluster: '{{ cluster_name }}'
       networks:
-        - name: CG61|CL-PODS|EPG_POD1
+        - name: 'CG61|CL-PODS|EPG_{{ u_branch }}'
           type: static
-          ip: '{{ vms.ip_address }}'
+          ip: '{{ vms.ipAddress }}'
           netmask: '{{ vms.netmask }}'
           gateway: '{{ vms.gateway }}'
           connected: yes

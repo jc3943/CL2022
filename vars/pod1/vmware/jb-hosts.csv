@@ -1,2 +1,2 @@
-﻿name_prefix,template,ip_adress,netmask,gateway
-ubunt-,TMPL_ubuntu2204-pod,172.0.1.1,255.255.255.0,172.0.1.254
+﻿vmPrefix,template,ipAddress,netmask,gateway
+ubunt,TMPL_ubuntu2204-pod,172.0.1.1,255.255.255.0,172.0.1.254
