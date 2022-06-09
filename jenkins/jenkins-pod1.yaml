@@ -102,5 +102,6 @@ spec:
       protocol: TCP
       port: 50000
       targetPort: 50000
-  type: LoadBalancer
   loadBalancerIP: 172.16.14.170
+  type: LoadBalancer
+  
