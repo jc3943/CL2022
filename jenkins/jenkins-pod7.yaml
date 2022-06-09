@@ -81,5 +81,4 @@ spec:
       protocol: TCP
       port: 50000
       targetPort: 50000
-  loadBalancerIP: 172.16.14.155
   type: LoadBalancer
