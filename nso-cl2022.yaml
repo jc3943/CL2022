@@ -13,7 +13,7 @@ spec:
       containers:
         - name: nso-podx
           image: jc3943/nso-sys:0609
-          command: [/etc/init.d/ncs start && /bin/sleep 3650d]
+          command: ["/bin/bash","-c","/etc/init.d/ncs start && /bin/sleep 3650d"]
           imagePullPolicy: "Always"
 ---
 kind: Service
