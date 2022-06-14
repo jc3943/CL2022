@@ -15,7 +15,7 @@ pipeline {
     }
   }
   stages{
-    stage('Create NSO Pods') {
+    stage('Build NSO k8s') {
       steps {
         container('jnlp') {
           sh '''
@@ -29,7 +29,7 @@ pipeline {
         }
       }
     }
-    stage('Create Jenkins Pods') {
+    stage('Build Jenkins k8s') {
       steps {
         container('ubuntu-runner') {
           //create Jenkins containers on k8s
@@ -38,7 +38,7 @@ pipeline {
         }
       }
     }
-    stage('Create Ubuntu Jumpboxes') {
+    stage('Build Ubuntu vms') {
       steps {
         container('ubuntu-runner') {
           //Create cloned ubuntu jumpboxes
