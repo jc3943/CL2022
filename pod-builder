@@ -59,5 +59,25 @@ pipeline {
         }
       }
     }
+    stage('Create 8kvs') {
+      steps {
+        container('ubuntu-runner') {
+          //deploy c8000v vms
+          sh '''
+          echo "Placeholder"
+          '''
+        }
+      }
+    }
+    stage('Create APIC sims') {
+      steps {
+        container('ubuntu-runner') {
+          //deploy apic sim vms
+          sh '''
+          echo "Placeholder"
+          '''
+        }
+      }
+    }
   }
 }
