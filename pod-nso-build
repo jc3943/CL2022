@@ -1,0 +1,33 @@
+//Authored by Jeff Comer
+
+def nodeLabel = 'pod-builder-agent'
+pipeline {
+  environment {
+        BRANCH_NAME = "${GIT_BRANCH}"
+        varPath = "vars/" + "${BRANCH_NAME}"
+        jenkinsDefs = "jenkins/jenkins-" + "${GIT_BRANCH}" + ".yaml"
+        def upperBranch = "${GIT_BRANCH}".toUpperCase()
+        VCSA_CREDS = credentials('vcsa-creds')
+  }
+  agent {
+    kubernetes {
+      yamlFile 'jnlp-ubuntu.yaml'
+    }
+  }
+  stages{
+    stage('Build NSO k8s') {
+      steps {
+        container('jnlp') {
+          sh '''
+          echo "Inbound Agent is Connected"
+          '''
+        }
+        container('ubuntu-runner') {
+          //create NSO containers on k8s
+          sh 'cp -r .kube /root/'
+          sh 'kubectl apply -f nso-cl2022.yaml -n ${BRANCH_NAME}'
+        }
+      }
+    }
+  }
+}
