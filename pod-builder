@@ -33,7 +33,7 @@ pipeline {
         }
         container('ubuntu-runner') {
           //create NSO containers on k8s
-          sh 'cp -r .kube /root/'
+          //sh 'cp -r .kube /root/'
           sh 'kubectl apply -f nso-cl2022.yaml -n ${BRANCH_NAME}'
         }
       }
@@ -42,7 +42,7 @@ pipeline {
       steps {
         container('ubuntu-runner') {
           //create Jenkins containers on k8s
-          sh 'cp -r .kube /root/'
+          //sh 'cp -r .kube /root/'
           sh 'kubectl apply -f $jenkinsDefs'
         }
       }
