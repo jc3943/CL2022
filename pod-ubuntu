@@ -32,7 +32,7 @@ pipeline {
                   vcsa_user: "$VCSA_CREDS_USR",
                   vcsa_pw: "$VCSA_CREDS_PSW",
                   datacenter_name: "HX-DEV",
-                  cluster_name: "HX-DEV",
+                  cluster_name: "hx-dev",
                   pod_name: "${BRANCH_NAME}",
                   u_branch: "$upperBranch"
               ],
