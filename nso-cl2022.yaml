@@ -2,44 +2,44 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: nso-podx
+  name: nso-614
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: nso-podx
+        app: nso-614
     spec:
       containers:
-        - name: nso-podx
-          image: jc3943/nso-sys:nso-care-demo-v1
+        - name: nso-614
+          image: jc3943/nso-sys:6.1.4
           command: ["/bin/bash","-c","/etc/init.d/ncs start && /bin/sleep 3650d"]
           imagePullPolicy: "Always"
 ---
 kind: Service
 apiVersion: v1
 metadata:
-  name: nso-podx
+  name: nso-614
   labels:
-    app: nso-podx
+    app: nso-614
 spec:
   selector:
-    app: nso-podx
+    app: nso-614
   ports:
-  - name: nso-podx-http
+  - name: nso-614-http
     protocol: TCP
     port: 8080
     targetPort: 8080
-  - name: nso-podx-netconf
+  - name: nso-614-netconf
     protocol: TCP
     port: 2022
     targetPort: 2022
-  - name: nso-podx-ssh
+  - name: nso-614-ssh
     protocol: TCP
     port: 2024
     targetPort: 2024
   selector:
-    app: nso-podx
+    app: nso-614
   type: LoadBalancer
   sessionAffinity: None
   externalTrafficPolicy: Cluster
