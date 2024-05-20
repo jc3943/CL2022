@@ -28,7 +28,7 @@ pipeline {
               playbook: './vmCloneUbuntu.yml',
               inventory: 'localhost',
               extraVars: [
-                  vcenter_hostname: "172.16.10.241",
+                  vcenter_hostname: "172.16.14.137",
                   vcsa_user: "$VCSA_CREDS_USR",
                   vcsa_pw: "$VCSA_CREDS_PSW",
                   datacenter_name: "HX-DEV",
